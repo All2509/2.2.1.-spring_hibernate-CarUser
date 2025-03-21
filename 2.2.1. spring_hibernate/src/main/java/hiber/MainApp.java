@@ -4,6 +4,7 @@ import hiber.config.AppConfig;
 import hiber.model.User;
 import hiber.model.Car;
 import hiber.service.UserService;
+import hiber.service.CarService; // Импортируем CarService
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.persistence.NoResultException;
@@ -17,6 +18,7 @@ public class MainApp {
               new AnnotationConfigApplicationContext(AppConfig.class);
 
       UserService userService = context.getBean(UserService.class);
+      CarService carService = context.getBean(CarService.class);
 
       // Создаем список пользователей
       List<User> users = new ArrayList<>();
@@ -39,14 +41,15 @@ public class MainApp {
 
       // Сохраняем машины в БД
       for (Car car : cars) {
-         userService.addCar(car);
+         carService.add(car);
       }
 
       // Получаем список пользователей и машин из БД
       List<User> savedUsers = userService.listUsers();
-      List<Car> savedCars = userService.listCars();
+      List<Car> savedCars = carService.listCars(); // Используем carService для получения списка машин
       System.out.println(savedUsers);
       System.out.println(savedCars);
+
       // Раздаем пользователям машины
       for (int i = 0; i < savedUsers.size(); i++) {
          if (i < savedCars.size()) {
